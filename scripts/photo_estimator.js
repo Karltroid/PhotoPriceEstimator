@@ -1,4 +1,4 @@
-var imageDisplay, imageCanvas, resolutionDisplay, aspectratioDisplay, colorratioDisplay; // document element variables
+var imageDisplay, imageCanvas, resolutionDisplay, aspectratioDisplay, colorratioDisplay, averagehexvalueDisplay; // document element variables
 var context;
 
 window.addEventListener('load', function()
@@ -9,6 +9,7 @@ window.addEventListener('load', function()
 	resolutionDisplay = document.getElementById('info-resolution');
 	aspectratioDisplay = document.getElementById('info-aspectratio');
 	colorratioDisplay = document.getElementById('info-colorratio');
+	averagehexvalueDisplay = document.getElementById('info-averagehexvalue');
 	context = imageCanvas.getContext('2d');
 });
 
@@ -64,20 +65,34 @@ function loadimage()
 
 function getColorData(imageData)
 {
-	var totalRed = 0, totalGreen = 0, totalBlue = 0, totalColor;
+	var totalRed = 0, totalGreen = 0, totalBlue = 0;
 
 	for (var i = 0; i < imageData.data.length; i += 4) // looping through each pixel's RGBA values in the data set
 	{
 		totalRed += imageData.data[i];
 		totalGreen += imageData.data[i+1];
 		totalBlue += imageData.data[i+2];
-		//console.log("R:" + imageData.data[i] + " G:" + imageData.data[i+1] + " B:" + imageData.data[i+2]);
 	}
 
-	totalColor = totalRed + totalGreen + totalBlue;
+	var pixels = imageData.data.length / 4;
+	var averageRed = Math.round(totalRed/pixels);
+	var averageBlue = Math.round(totalBlue/pixels);
+	var averageGreen = Math.round(totalGreen/pixels);
 
-	//console.log("R:" + totalRed + " G:" + totalGreen + " B:" + totalBlue);
-	colorratioDisplay.innerHTML = "<font color=red>" + (totalRed/totalColor).toFixed(2) * 100 +
-						"</font> : <font color=green>" + (totalGreen/totalColor).toFixed(2) * 100 +
-						"</font> : <font color=blue>" + (totalBlue/totalColor).toFixed(2) * 100 + "</font>";
+	colorratioDisplay.innerHTML = "<font color=red>" + averageRed +
+						"</font> : <font color=green>" + averageBlue +
+						"</font> : <font color=blue>" + averageGreen + "</font>";
+
+	averagehexvalueDisplay.innerHTML = rgbToHex(averageRed, averageBlue, averageGreen);
+}
+
+function componentToHex(c)
+{
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b)
+{
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }

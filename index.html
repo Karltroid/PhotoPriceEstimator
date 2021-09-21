@@ -8,16 +8,14 @@
 	</head>
 	<body>
 		<div id="container">
-			<h1>Photo Printing Price Estimator</h1>
+			<h1 class="pushdown">Photo Printing Price Estimator</h1>
 
-			<input type="file" accept="image/*" onchange="processimage()" />
-			<br/><img id="userimage" src="#" />
-			
-			<br/>
+			<input type="file" accept="image/*" class="pushdown" onchange="processimage()" />
+
+			<img id="userimage" class="pushdown" src="#" />
 			<canvas id="userimage-canvas"></canvas>
-			<br/>
 			
-			<table id="photo-information">
+			<table id="photo-information" class="pushdown">
 				<tr>
 					<td>Resolution</td>
 					<td id="info-resolution">...</td>
@@ -27,8 +25,12 @@
 					<td id="info-aspectratio">...</td>
 				</tr>
 				<tr>
-					<td>Color Ratio</td>
+					<td>Average RGB Value</td>
 					<td id="info-colorratio">...</td>
+				</tr>
+				<tr>
+					<td>Average Hex Value</td>
+					<td id="info-averagehexvalue">...</td>
 				</tr>
 			</table>
 		</div>

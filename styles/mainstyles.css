@@ -48,11 +48,14 @@ input, #userimage
 	border-radius: 12px;
 }
 
+.pushdown
+{
+	margin-bottom: 21px;
+}
+
 #userimage
 {
 	width: 75%;
-	max-width: 100%;
-	min-width: 75%;
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	border: 3px solid rgba(0, 0, 0, 0.15);
 }
@@ -73,11 +76,20 @@ input, #userimage
 	display: none;
 }
 
-@media only screen and (max-width: 600px)
+@media only screen and (max-width: 700px)
 {
 	#container
 	{
-		width: 100%;
-		padding: 21px 0px;
+		width: calc(100% - 42px);
+	}
+
+	input
+	{
+		width: calc(100% - 16px);
+	}
+
+	#userimage
+	{
+		width: calc(100% - 6px);
 	}
 }
