@@ -10,6 +10,8 @@ window.addEventListener('load', function()
 	aspectratioDisplay = document.getElementById('info-aspectratio');
 	colorratioDisplay = document.getElementById('info-colorratio');
 	averagehexvalueDisplay = document.getElementById('info-averagehexvalue');
+	purewhiteamountDisplay = document.getElementById('info-purewhiteamount');
+	pureblackamountDisplay = document.getElementById('info-pureblackamount');
 	context = imageCanvas.getContext('2d');
 });
 
@@ -65,13 +67,18 @@ function loadimage()
 
 function getColorData(imageData)
 {
-	var totalRed = 0, totalGreen = 0, totalBlue = 0;
+	var totalRed = 0, totalGreen = 0, totalBlue = 0, pureWhitePixels = 0, pureBlackPixels = 0;
 
 	for (var i = 0; i < imageData.data.length; i += 4) // looping through each pixel's RGBA values in the data set
 	{
 		totalRed += imageData.data[i];
 		totalGreen += imageData.data[i+1];
 		totalBlue += imageData.data[i+2];
+
+		if (imageData.data[i] == 255 && imageData.data[i+1] == 255 && imageData.data[i+2] == 255 || imageData.data[i+3] == 0)
+			pureWhitePixels++;
+		else if (imageData.data[i] == 0 && imageData.data[i+1] == 0 && imageData.data[i+2] == 0 && imageData.data[i+3] > 0)
+			pureBlackPixels++;
 	}
 
 	var pixels = imageData.data.length / 4;
@@ -84,6 +91,11 @@ function getColorData(imageData)
 						"</font> : <font color=blue>" + averageGreen + "</font>";
 
 	averagehexvalueDisplay.innerHTML = rgbToHex(averageRed, averageBlue, averageGreen);
+
+	console.log(imageData.data[3]);
+
+	purewhiteamountDisplay.innerHTML = (pureWhitePixels/pixels * 100).toFixed(2) + "%";
+	pureblackamountDisplay.innerHTML = (pureBlackPixels/pixels * 100).toFixed(2) + "%";
 }
 
 function componentToHex(c)
