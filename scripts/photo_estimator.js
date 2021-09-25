@@ -90,6 +90,10 @@ function displayImageData(image, colorData)
 																	<font color=green>" + rgb[1] + "</font> : \
 																	<font color=blue>" + rgb[2] + "</font>";
 
+	// convert rgb value to hex and display it
+	var hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
+	averageHexValueDisplay.innerHTML = hex;
+
 	// convert rgb to cmyk and display it
 	var cmyk = rgbToCmyk(rgb[0], rgb[1], rgb[2]);
 	averageCmykDisplay.innerHTML = "<font color=#0093d3>" + cmyk[0] + "</font>, \
@@ -97,15 +101,13 @@ function displayImageData(image, colorData)
 																	<font color=#bab109>" + cmyk[2] + "</font>, "
 																	+ cmyk[3];
 
-	// convert rgb value to hex and display it
-	var hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
-	averageHexValueDisplay.innerHTML = hex;
-
 	// calculate and display the % of pixels that will be ignored during printing
-	ignoredPixelsDisplay.innerHTML = ((whitePixels + transparentPixels) / pixelAmount * 100).toFixed(2) + "%";
+	ignoredPixelsDisplay.innerHTML =
+		((whitePixels + transparentPixels) / pixelAmount * 100).toFixed(2) + "%";
 
 	// convert rgb to luminance and display it
-	luminanceDisplay.innerHTML = (((0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2])) / 255 * 100).toFixed(2) + "%";
+	luminanceDisplay.innerHTML =
+		(((0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2])) / 255 * 100).toFixed(2) + "%";
 }
 
 function gcd(a, b)
@@ -113,7 +115,7 @@ function gcd(a, b)
 	return (b == 0) ? a : gcd(b, a%b);
 }
 
-function componentToHex(c)
+function colorToHex(c)
 {
 	var hex = c.toString(16);
 	return hex.length == 1 ? "0" + hex : hex;
@@ -121,20 +123,24 @@ function componentToHex(c)
 
 function rgbToHex(r, g, b)
 {
-	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+	return "#<font color=red>" + colorToHex(r) +"</font\
+					><font color=green>" + colorToHex(g) + "</font\
+					><font color=blue>" + colorToHex(b) + "</font>";
 }
 
 function rgbToCmyk(r, g, b)
 {
-    if ((r == 0) && (g == 0) && (b == 0))
+    if ((r == 0) && (g == 0) && (b == 0)) // return black directly to avoid errors
         return ["0%", "0%", "0%", "100%"];
     else
 		{
-        var calcR = 1 - (r / 255),
+				// convert rgb to 0-1 deciamls
+				var calcR = 1 - (r / 255),
             calcG = 1 - (g / 255),
             calcB = 1 - (b / 255);
 
-        var k = Math.min(calcR, Math.min(calcG, calcB)),
+				// convert rgb to cmyk
+				var k = Math.min(calcR, Math.min(calcG, calcB)),
             c = (calcR - k) / (1 - k),
             m = (calcG - k) / (1 - k),
             y = (calcB - k) / (1 - k);
@@ -145,6 +151,6 @@ function rgbToCmyk(r, g, b)
 				y = Math.round(y * 100) + "%";
 				k = Math.round(k * 100) + "%";
 
-        return [c, m, y, k];
+				return [c, m, y, k];
     }
 }
