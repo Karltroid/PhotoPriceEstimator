@@ -17,7 +17,7 @@
 		<div id="container" class="centered-block">
 			<h1 class="pushdown">Photo Printing Price Estimator</h1>
 
-			<input type="file" accept="image/*" class="pushdown centered-block" onchange="processimage()" />
+			<input type="file" accept="image/*" class="pushdown centered-block" onchange="getImageData()" />
 
 			<img id="userimage" class="pushdown" src="#" />
 			<canvas id="userimage-canvas"></canvas>
@@ -40,12 +40,12 @@
 					<td id="info-averagehexvalue">...</td>
 				</tr>
 				<tr>
-					<td>Ignored Pixels (White / Transparent)</td>
-					<td id="info-ignoredpixels">...</td>
+					<td>Average Luminance</td>
+					<td id="info-luminance">...</td>
 				</tr>
 				<tr>
-					<td>Luminance</td>
-					<td id="info-luminance">...</td>
+					<td>White / Transparent</td>
+					<td id="info-ignoredpixels">...</td>
 				</tr>
 			</table>
 		</div>

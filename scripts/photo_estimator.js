@@ -12,90 +12,96 @@ window.addEventListener('load', function()
 	context = imageCanvas.getContext('2d');
 });
 
-function gcd(a, b) // recursive greatest common divisor
+function getImageData()
 {
-	return (b == 0) ? a : gcd(b, a%b);
-}
-
-function processimage()
-{
-	img = loadimage();
-
-	imageDisplay.src = img.src; // display the user's image loadimage().src
-}
-
-function loadimage()
-{
-	var file, img;
+	var file, image;
 
 	if (file = event.target.files[0]) // check if file exists and is fine
 	{
-		img = new Image();
+		image = new Image();
 
-		img.onload = function()
+		image.onerror = function()
 		{
-			resolutionDisplay.innerHTML = this.width + " x " + this.height;
+			alert("not a valid file: " + file.type);
+			return;
+		};
 
-			var r = gcd (this.width, this.height); // get highest divisible number of width and height
-
-			if (r > 1) // display simplified aspect ratio
-				aspectratioDisplay.innerHTML = (this.width / r) + ":" + (this.height / r);
-			else  // display exact decimal aspect ratio if no simplification can be done
-				aspectratioDisplay.innerHTML = ("<font color=#823333>Nonstandard Ratio </font>" + (this.width / this.height).toFixed(3));
-
+		image.onload = function()
+		{
 			// load canvas
 			imageCanvas.width = this.width;
 			imageCanvas.height = this.height;
+
+			// get color data
 			context = imageCanvas.getContext('2d');
-			context.drawImage(img, 0, 0);
-			var imageData = context.getImageData(0, 0, this.width-1, this.height-1);
-			displayImageData(imageData);
+			context.drawImage(image, 0, 0);
+			var colorData = context.getImageData(0, 0, this.width-1, this.height-1);
+
+			// calculate and display image data (resolution, aspectratio, color data, ...)
+			displayImageData(image, colorData);
 		};
 
-		img.onerror = function()
-		{
-			alert("not a valid file: " + file.type);
-		};
-
-		img.src = URL.createObjectURL(file);
-		return img;
+		image.src = URL.createObjectURL(file);
 	}
 }
 
-function displayImageData(imageData)
+function displayImageData(image, colorData)
 {
-	var totalRed = 0, totalGreen = 0, totalBlue = 0, ignoredPixels = 0, luminance;
+	// display image
+	imageDisplay.src = image.src;
 
-	for (var i = 0; i < imageData.data.length; i += 4) // looping through each pixel's RGBA values in the data set
+	// display resolution
+	resolutionDisplay.innerHTML = image.width + " x " + image.height;
+
+	// display aspect ratio
+	var aspectDivisor = gcd(image.width, image.height);
+	if (aspectDivisor > 1) // display simplified aspect ratio
+		aspectratioDisplay.innerHTML = (image.width / aspectDivisor) + ":" + (image.height / aspectDivisor);
+	else
+		aspectratioDisplay.innerHTML = ("<font color=#823333>Nonstandard Ratio </font>" + (image.width / image.height).toFixed(3));
+
+	// add up all RGB values and count white/transparent pixels that won't be printed
+	var totalRed = 0, totalGreen = 0, totalBlue = 0, ignoredPixels = 0;
+	for (var i = 0; i < colorData.data.length; i += 4)
 	{
-		if (imageData.data[i+3] == 0)
+		if (colorData.data[i+3] == 0)
 		{
 			ignoredPixels++;
 			continue;
 		}
-		else if (imageData.data[i] == 255 &&imageData.data[i+1] == 255 && imageData.data[i+2] == 255)
+		else if (colorData.data[i] == 255 &&colorData.data[i+1] == 255 && colorData.data[i+2] == 255)
 			ignoredPixels++;
 
-		totalRed += imageData.data[i];
-		totalGreen += imageData.data[i+1];
-		totalBlue += imageData.data[i+2];
+		totalRed += colorData.data[i];
+		totalGreen += colorData.data[i+1];
+		totalBlue += colorData.data[i+2];
 	}
 
-	var pixels = imageData.data.length / 4;
-	var countedPixels = pixels - ignoredPixels;
+	// get average rgb color of the image
+	var pixelAmount = colorData.data.length / 4;
+	var countedPixels = pixelAmount - ignoredPixels;
 	var averageRed = Math.round(totalRed/countedPixels);
 	var averageBlue = Math.round(totalBlue/countedPixels);
 	var averageGreen = Math.round(totalGreen/countedPixels);
 
+	// display average rgb color of the image
 	colorratioDisplay.innerHTML = "<font color=red>" + averageRed +
 						"</font> : <font color=green>" + averageBlue +
 						"</font> : <font color=blue>" + averageGreen + "</font>";
 
+	// convert rgb value to hex and display it
 	averagehexvalueDisplay.innerHTML = rgbToHex(averageRed, averageBlue, averageGreen);
 
-	ignoredpixelsDisplay.innerHTML = (ignoredPixels/pixels * 100).toFixed(2) + "%";
+	// calculate and display the % of pixels that will be ignored during printing
+	ignoredpixelsDisplay.innerHTML = (ignoredPixels/pixelAmount * 100).toFixed(2) + "%";
 
+	// convert rgb to luminance and display it
 	luminanceDisplay.innerHTML = (((0.2126 * averageRed) + (0.7152 * averageGreen) + (0.0722 * averageBlue)) / 255 * 100).toFixed(2) + "%";
+}
+
+function gcd(a, b)
+{
+	return (b == 0) ? a : gcd(b, a%b);
 }
 
 function componentToHex(c)
