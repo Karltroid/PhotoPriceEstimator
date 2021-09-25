@@ -86,9 +86,10 @@ function displayImageData(image, colorData)
 					Math.round(rgb[2] / countedPixels) ];
 
 	// display average rgb color of the image
-	averageRgbDisplay.innerHTML =	 "<font color=red>" + rgb[0] + "</font> : \
-																	<font color=green>" + rgb[1] + "</font> : \
-																	<font color=blue>" + rgb[2] + "</font>";
+	averageRgbDisplay.innerHTML =
+		"<font color=red>" + rgb[0] + "</font> : \
+		<font color=green>" + rgb[1] + "</font> : \
+		<font color=blue>" + rgb[2] + "</font>";
 
 	// convert rgb value to hex and display it
 	var hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
@@ -96,10 +97,10 @@ function displayImageData(image, colorData)
 
 	// convert rgb to cmyk and display it
 	var cmyk = rgbToCmyk(rgb[0], rgb[1], rgb[2]);
-	averageCmykDisplay.innerHTML = "<font color=#0093d3>" + cmyk[0] + "</font>, \
-																	<font color=#cc006b>" + cmyk[1] + "</font>, \
-																	<font color=#bab109>" + cmyk[2] + "</font>, "
-																	+ cmyk[3];
+	averageCmykDisplay.innerHTML =
+		"<font color=#0093d3>" + cmyk[0] + "</font>, \
+		<font color=#cc006b>" + cmyk[1] + "</font>, \
+		<font color=#bab109>" + cmyk[2] + "</font>, " + cmyk[3];
 
 	// calculate and display the % of pixels that will be ignored during printing
 	ignoredPixelsDisplay.innerHTML =
@@ -131,26 +132,26 @@ function rgbToHex(r, g, b)
 function rgbToCmyk(r, g, b)
 {
     if ((r == 0) && (g == 0) && (b == 0)) // return black directly to avoid errors
-        return ["0%", "0%", "0%", "100%"];
+			return ["0%", "0%", "0%", "100%"];
     else
 		{
-				// convert rgb to 0-1 deciamls
-				var calcR = 1 - (r / 255),
-            calcG = 1 - (g / 255),
-            calcB = 1 - (b / 255);
+			// convert rgb to 0-1 deciamls
+			var calcR = 1 - (r / 255),
+					calcG = 1 - (g / 255),
+					calcB = 1 - (b / 255);
 
-				// convert rgb to cmyk
-				var k = Math.min(calcR, Math.min(calcG, calcB)),
-            c = (calcR - k) / (1 - k),
-            m = (calcG - k) / (1 - k),
-            y = (calcB - k) / (1 - k);
+			// convert rgb to cmyk
+			var k = Math.min(calcR, Math.min(calcG, calcB)),
+					c = (calcR - k) / (1 - k),
+					m = (calcG - k) / (1 - k),
+					y = (calcB - k) / (1 - k);
 
-				// convert to percentage
-				c = Math.round(c * 100) + "%";
-				m = Math.round(m * 100) + "%";
-				y = Math.round(y * 100) + "%";
-				k = Math.round(k * 100) + "%";
+			// convert to percentage
+			c = Math.round(c * 100) + "%";
+			m = Math.round(m * 100) + "%";
+			y = Math.round(y * 100) + "%";
+			k = Math.round(k * 100) + "%";
 
-				return [c, m, y, k];
+			return [c, m, y, k];
     }
 }
