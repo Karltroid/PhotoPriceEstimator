@@ -7,7 +7,7 @@ window.addEventListener('load', function()
 	aspectratioDisplay = document.getElementById('info-aspectratio');
 	colorratioDisplay = document.getElementById('info-colorratio');
 	averagehexvalueDisplay = document.getElementById('info-averagehexvalue');
-	purewhiteamountDisplay = document.getElementById('info-ignoredpixels');
+	ignoredpixelsDisplay = document.getElementById('info-ignoredpixels');
 	luminanceDisplay = document.getElementById('info-luminance');
 	context = imageCanvas.getContext('2d');
 });
@@ -49,7 +49,7 @@ function loadimage()
 			context = imageCanvas.getContext('2d');
 			context.drawImage(img, 0, 0);
 			var imageData = context.getImageData(0, 0, this.width-1, this.height-1);
-			getColorData(imageData);
+			displayImageData(imageData);
 		};
 
 		img.onerror = function()
@@ -62,25 +62,30 @@ function loadimage()
 	}
 }
 
-function getColorData(imageData)
+function displayImageData(imageData)
 {
-	var totalRed = 0, totalGreen = 0, totalBlue = 0, pureWhitePixels = 0, pureBlackPixels = 0, luminance;
+	var totalRed = 0, totalGreen = 0, totalBlue = 0, ignoredPixels = 0, luminance;
 
 	for (var i = 0; i < imageData.data.length; i += 4) // looping through each pixel's RGBA values in the data set
 	{
+		if (imageData.data[i+3] == 0)
+		{
+			ignoredPixels++;
+			continue;
+		}
+		else if (imageData.data[i] == 255 &&imageData.data[i+1] == 255 && imageData.data[i+2] == 255)
+			ignoredPixels++;
+
 		totalRed += imageData.data[i];
 		totalGreen += imageData.data[i+1];
 		totalBlue += imageData.data[i+2];
-
-		if (imageData.data[i] == 255 &&imageData.data[i+1] == 255 && imageData.data[i+2] == 255 || imageData.data[i+3] == 0)
-			pureWhitePixels++;
-
 	}
 
 	var pixels = imageData.data.length / 4;
-	var averageRed = Math.round(totalRed/pixels);
-	var averageBlue = Math.round(totalBlue/pixels);
-	var averageGreen = Math.round(totalGreen/pixels);
+	var countedPixels = pixels - ignoredPixels;
+	var averageRed = Math.round(totalRed/countedPixels);
+	var averageBlue = Math.round(totalBlue/countedPixels);
+	var averageGreen = Math.round(totalGreen/countedPixels);
 
 	colorratioDisplay.innerHTML = "<font color=red>" + averageRed +
 						"</font> : <font color=green>" + averageBlue +
@@ -88,7 +93,7 @@ function getColorData(imageData)
 
 	averagehexvalueDisplay.innerHTML = rgbToHex(averageRed, averageBlue, averageGreen);
 
-	purewhiteamountDisplay.innerHTML = (pureWhitePixels/pixels * 100).toFixed(2) + "%";
+	ignoredpixelsDisplay.innerHTML = (ignoredPixels/pixels * 100).toFixed(2) + "%";
 
 	luminanceDisplay.innerHTML = (((0.2126 * averageRed) + (0.7152 * averageGreen) + (0.0722 * averageBlue)) / 255 * 100).toFixed(2) + "%";
 }
