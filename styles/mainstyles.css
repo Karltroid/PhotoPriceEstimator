@@ -84,6 +84,22 @@ input, #userimage
 	display: none;
 }
 
+footer
+{
+  color: rgba(0,0,0,.65);
+}
+
+footer a
+{
+  text-decoration: none;
+  color: black;
+}
+
+footer a:hover
+{
+  text-decoration: underline;
+}
+
 .centered-block
 {
   display: block;
