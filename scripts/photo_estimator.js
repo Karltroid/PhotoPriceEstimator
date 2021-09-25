@@ -131,27 +131,35 @@ function rgbToHex(r, g, b)
 
 function rgbToCmyk(r, g, b)
 {
-    if ((r == 0) && (g == 0) && (b == 0)) // return black directly to avoid errors
-			return ["0%", "0%", "0%", "100%"];
-    else
-		{
-			// convert rgb to 0-1 deciamls
-			var calcR = 1 - (r / 255),
-					calcG = 1 - (g / 255),
-					calcB = 1 - (b / 255);
+	var c, m, y, k;
 
-			// convert rgb to cmyk
-			var k = Math.min(calcR, Math.min(calcG, calcB)),
-					c = (calcR - k) / (1 - k),
-					m = (calcG - k) / (1 - k),
-					y = (calcB - k) / (1 - k);
+	if ((r == 0) && (g == 0) && (b == 0))
+	{
+		// set black values directly to avoid errors
+		c = "0%";
+		m = "0%";
+		y = "0%";
+		k = "100%";
+	}
+	else
+	{
+		// convert rgb to 0-1 deciamls
+		var calcR = 1 - (r / 255),
+		calcG = 1 - (g / 255),
+		calcB = 1 - (b / 255);
 
-			// convert to percentage
-			c = Math.round(c * 100) + "%";
-			m = Math.round(m * 100) + "%";
-			y = Math.round(y * 100) + "%";
-			k = Math.round(k * 100) + "%";
+		// convert rgb to cmyk
+		k = Math.min(calcR, Math.min(calcG, calcB));
+		c = (calcR - k) / (1 - k);
+		m = (calcG - k) / (1 - k);
+		y = (calcB - k) / (1 - k);
 
-			return [c, m, y, k];
-    }
+		// convert to percentage
+		c = Math.round(c * 100) + "%";
+		m = Math.round(m * 100) + "%";
+		y = Math.round(y * 100) + "%";
+		k = Math.round(k * 100) + "%";
+	}
+
+	return [c, m, y, k];
 }
