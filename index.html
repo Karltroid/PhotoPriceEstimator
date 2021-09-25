@@ -14,17 +14,17 @@
 		<link rel="stylesheet" href="styles/mainstyles.css" />
 	</head>
 	<body>
-		<div id="container">
+		<div id="container" class="centered-block">
 			<h1 class="pushdown">Photo Printing Price Estimator</h1>
 
-			<input type="file" accept="image/*" class="pushdown" onchange="processimage()" />
+			<input type="file" accept="image/*" class="pushdown centered-block" onchange="processimage()" />
 
 			<img id="userimage" class="pushdown" src="#" />
 			<canvas id="userimage-canvas"></canvas>
-			
+
 			<table id="photo-information" class="pushdown">
 				<tr>
-					<td>Resolution</td>
+					<td class="row-title">Resolution</td>
 					<td id="info-resolution">...</td>
 				</tr>
 				<tr>
@@ -40,12 +40,12 @@
 					<td id="info-averagehexvalue">...</td>
 				</tr>
 				<tr>
-					<td>Pure White or Transparent</td>
-					<td id="info-purewhiteamount">...</td>
+					<td>Ignored Pixels (White / Transparent)</td>
+					<td id="info-ignoredpixels">...</td>
 				</tr>
 				<tr>
-					<td>Pure Black</td>
-					<td id="info-pureblackamount">...</td>
+					<td>Luminance</td>
+					<td id="info-luminance">...</td>
 				</tr>
 			</table>
 		</div>

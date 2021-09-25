@@ -1,6 +1,3 @@
-var imageDisplay, imageCanvas, resolutionDisplay, aspectratioDisplay, colorratioDisplay, averagehexvalueDisplay; // document element variables
-var context;
-
 window.addEventListener('load', function()
 {
 	// declare all document element variables
@@ -10,8 +7,8 @@ window.addEventListener('load', function()
 	aspectratioDisplay = document.getElementById('info-aspectratio');
 	colorratioDisplay = document.getElementById('info-colorratio');
 	averagehexvalueDisplay = document.getElementById('info-averagehexvalue');
-	purewhiteamountDisplay = document.getElementById('info-purewhiteamount');
-	pureblackamountDisplay = document.getElementById('info-pureblackamount');
+	purewhiteamountDisplay = document.getElementById('info-ignoredpixels');
+	luminanceDisplay = document.getElementById('info-luminance');
 	context = imageCanvas.getContext('2d');
 });
 
@@ -34,7 +31,7 @@ function loadimage()
 	if (file = event.target.files[0]) // check if file exists and is fine
 	{
 		img = new Image();
-		
+
 		img.onload = function()
 		{
 			resolutionDisplay.innerHTML = this.width + " x " + this.height;
@@ -44,7 +41,7 @@ function loadimage()
 			if (r > 1) // display simplified aspect ratio
 				aspectratioDisplay.innerHTML = (this.width / r) + ":" + (this.height / r);
 			else  // display exact decimal aspect ratio if no simplification can be done
-				aspectratioDisplay.innerHTML = this.width / this.height;
+				aspectratioDisplay.innerHTML = ("<font color=#823333>Nonstandard Ratio </font>" + (this.width / this.height).toFixed(3));
 
 			// load canvas
 			imageCanvas.width = this.width;
@@ -61,13 +58,13 @@ function loadimage()
 		};
 
 		img.src = URL.createObjectURL(file);
-		return img;		
+		return img;
 	}
 }
 
 function getColorData(imageData)
 {
-	var totalRed = 0, totalGreen = 0, totalBlue = 0, pureWhitePixels = 0, pureBlackPixels = 0;
+	var totalRed = 0, totalGreen = 0, totalBlue = 0, pureWhitePixels = 0, pureBlackPixels = 0, luminance;
 
 	for (var i = 0; i < imageData.data.length; i += 4) // looping through each pixel's RGBA values in the data set
 	{
@@ -75,10 +72,9 @@ function getColorData(imageData)
 		totalGreen += imageData.data[i+1];
 		totalBlue += imageData.data[i+2];
 
-		if (imageData.data[i] == 255 && imageData.data[i+1] == 255 && imageData.data[i+2] == 255 || imageData.data[i+3] == 0)
+		if (imageData.data[i] == 255 &&imageData.data[i+1] == 255 && imageData.data[i+2] == 255 || imageData.data[i+3] == 0)
 			pureWhitePixels++;
-		else if (imageData.data[i] == 0 && imageData.data[i+1] == 0 && imageData.data[i+2] == 0 && imageData.data[i+3] > 0)
-			pureBlackPixels++;
+
 	}
 
 	var pixels = imageData.data.length / 4;
@@ -92,10 +88,9 @@ function getColorData(imageData)
 
 	averagehexvalueDisplay.innerHTML = rgbToHex(averageRed, averageBlue, averageGreen);
 
-	console.log(imageData.data[3]);
-
 	purewhiteamountDisplay.innerHTML = (pureWhitePixels/pixels * 100).toFixed(2) + "%";
-	pureblackamountDisplay.innerHTML = (pureBlackPixels/pixels * 100).toFixed(2) + "%";
+
+	luminanceDisplay.innerHTML = (((0.2126 * averageRed) + (0.7152 * averageGreen) + (0.0722 * averageBlue)) / 255 * 100).toFixed(2) + "%";
 }
 
 function componentToHex(c)
