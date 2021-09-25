@@ -1,3 +1,7 @@
+const ASPECTRATIOS = ["16:9", "16:10", "4:3", "2:1"];
+const ASPECTRATIOS_DECIMAL = [1.77, 1.60, 1.33, 2.00];
+
+
 window.addEventListener('load', function()
 {
 	// declare all document element variables
@@ -5,12 +9,14 @@ window.addEventListener('load', function()
 	imageCanvas = document.getElementById('userimage-canvas');
 	resolutionDisplay = document.getElementById('info-resolution');
 	aspectRatioDisplay = document.getElementById('info-aspectratio');
+	orientationDisplay = document.getElementById('info-orientation');
 	averageRgbDisplay = document.getElementById('info-averagergb');
 	averageHexValueDisplay = document.getElementById('info-averagehexvalue');
 	averageCmykDisplay = document.getElementById('info-averagecmyk');
 	ignoredPixelsDisplay = document.getElementById('info-ignoredpixels');
 	luminanceDisplay = document.getElementById('info-luminance');
 });
+
 
 function getImageData()
 {
@@ -56,10 +62,38 @@ function displayImageData(image, colorData)
 
 	// display aspect ratio
 	var aspectDivisor = gcd(image.width, image.height);
-	if (aspectDivisor > 1) // display simplified aspect ratio
+	if (aspectDivisor > 1)
+	{
 		aspectRatioDisplay.innerHTML = (image.width / aspectDivisor) + ":" + (image.height / aspectDivisor);
+
+		// display image orientation
+		if (image.width == image.height)
+			orientationDisplay.innerHTML = "Square";
+	}
 	else
-		aspectRatioDisplay.innerHTML = ("<font color=#823333>Custom Ratio </font>" + (image.width / image.height).toFixed(3));
+	{
+		var imageDecimalAspect = image.width / image.height;
+
+		if (imageDecimalAspect > 1)
+		{
+			// display image orientation
+			orientationDisplay.innerHTML = "Landscape";
+
+			// get closest aspect ratio and display it
+			var closestRatio = findClosestAspectRatio(imageDecimalAspect);
+			aspectRatioDisplay.innerHTML = "<font color=#823333>Suggested Ratio</font> " + closestRatio;
+		}
+		else
+		{
+			// display image orientation
+			orientationDisplay.innerHTML = "Portrait";
+
+			// get closest aspect ratio and display it
+			var closestRatio = findClosestAspectRatio(image.height / image.width);
+			aspectRatioDisplay.innerHTML = "<font color=#823333>Suggested Ratio: </font>" + closestRatio;
+		}
+
+	}
 
 	// add up all RGB values and count white/transparent pixels that won't be printed
 	var rgb = [0, 0, 0], transparentPixels = 0, whitePixels = 0;
@@ -111,17 +145,45 @@ function displayImageData(image, colorData)
 		(((0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2])) / 255 * 100).toFixed(2) + "%";
 }
 
+
+// loop through each aspectratio and return which one has the smallest
+// difference from the image's exact aspect ratio
+function findClosestAspectRatio(imageDecimalAspect)
+{
+	var closestAspectIndex = 0, closestAspectDifference = null;
+
+
+	for (var i = 0; i < ASPECTRATIOS_DECIMAL.length; i++)
+	{
+		var aspectDifference = Math.abs(ASPECTRATIOS_DECIMAL[i] - imageDecimalAspect);
+
+		if (closestAspectDifference == null || aspectDifference < closestAspectDifference)
+		{
+			closestAspectDifference = aspectDifference;
+			closestAspectIndex = i;
+		}
+	}
+
+	return ASPECTRATIOS[closestAspectIndex];
+}
+
+
+// recursively find the largest number that divides into the two numbers
 function gcd(a, b)
 {
 	return (b == 0) ? a : gcd(b, a%b);
 }
 
+
+// convert an individual component of an rgb value to hex
 function colorToHex(c)
 {
 	var hex = c.toString(16);
 	return hex.length == 1 ? "0" + hex : hex;
 }
 
+
+// convert r, g, and b into hex and stich them together for the full hex value
 function rgbToHex(r, g, b)
 {
 	return "#<font color=red>" + colorToHex(r) +"</font\
@@ -129,13 +191,15 @@ function rgbToHex(r, g, b)
 					><font color=blue>" + colorToHex(b) + "</font>";
 }
 
+
+// convert the rgb value into cmyk
 function rgbToCmyk(r, g, b)
 {
 	var c, m, y, k;
 
 	if ((r == 0) && (g == 0) && (b == 0))
 	{
-		// set black values directly to avoid errors
+		// set solid black value directly to avoid dividing by 0
 		c = "0%";
 		m = "0%";
 		y = "0%";
@@ -148,13 +212,13 @@ function rgbToCmyk(r, g, b)
 		calcG = 1 - (g / 255),
 		calcB = 1 - (b / 255);
 
-		// convert rgb to cmyk
+		// formula for turning rgb to cmyk
 		k = Math.min(calcR, Math.min(calcG, calcB));
 		c = (calcR - k) / (1 - k);
 		m = (calcG - k) / (1 - k);
 		y = (calcB - k) / (1 - k);
 
-		// convert to percentage
+		// convert cmyk to percentage form
 		c = Math.round(c * 100) + "%";
 		m = Math.round(m * 100) + "%";
 		y = Math.round(y * 100) + "%";
