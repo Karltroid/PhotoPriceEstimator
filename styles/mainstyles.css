@@ -84,6 +84,15 @@ input, #userimage
 	display: none;
 }
 
+#info-printsize span
+{
+  display: inline-block;
+  padding: 0 4px;
+  margin: 0 4px 4px 0;
+  background: rgba(0, 0, 0, .125);
+  border-radius: 3px;
+}
+
 footer
 {
   color: rgba(0,0,0,.65);

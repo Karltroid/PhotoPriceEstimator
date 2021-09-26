@@ -1,5 +1,20 @@
-const ASPECTRATIOS = ["4 x 6", "5 x 7", "18 x 24", "8.5 x 11", "8 x 10"];
-const ASPECTRATIOS_DECIMAL = [1.50, 1.40, 1.33, 1.29, 1.25];
+const ASPECTRATIOS =
+[
+	"<span>4\" x 6\"</span><span>12\" x 18\"</span><span>24\" x 36\"</span>",
+	"5\" x 7\"",
+	"18\" x 24\"",
+	"8.5\" x 11\"",
+	"8\" x 10\""
+];
+
+const ASPECTRATIOS_DECIMAL =
+[
+	1.50,
+	1.40,
+	1.33,
+	1.29,
+	1.25
+];
 
 
 window.addEventListener('load', function()
@@ -68,7 +83,7 @@ function displayImageData(image, colorData)
 	{
 		// display image orientation
 		orientationDisplay.innerHTML = "Square";
-		closestRatio = "1 x 1";
+		closestRatio = "1\" x 1\"";
 	}
 	else if (imageDecimalAspect > 1)
 	{
