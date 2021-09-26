@@ -1,5 +1,5 @@
-const ASPECTRATIOS = ["16:9", "16:10", "4:3", "2:1"];
-const ASPECTRATIOS_DECIMAL = [1.77, 1.60, 1.33, 2.00];
+const ASPECTRATIOS = ["4 x 6", "5 x 7", "18 x 24", "8.5 x 11", "8 x 10"];
+const ASPECTRATIOS_DECIMAL = [1.50, 1.40, 1.33, 1.29, 1.25];
 
 
 window.addEventListener('load', function()
@@ -8,7 +8,7 @@ window.addEventListener('load', function()
 	imageDisplay = document.getElementById('userimage');
 	imageCanvas = document.getElementById('userimage-canvas');
 	resolutionDisplay = document.getElementById('info-resolution');
-	aspectRatioDisplay = document.getElementById('info-aspectratio');
+	printSizeDisplay = document.getElementById('info-printsize');
 	orientationDisplay = document.getElementById('info-orientation');
 	averageRgbDisplay = document.getElementById('info-averagergb');
 	averageHexValueDisplay = document.getElementById('info-averagehexvalue');
@@ -60,40 +60,33 @@ function displayImageData(image, colorData)
 	// display resolution
 	resolutionDisplay.innerHTML = image.width + " x " + image.height;
 
-	// display aspect ratio
-	var aspectDivisor = gcd(image.width, image.height);
-	if (aspectDivisor > 1)
-	{
-		aspectRatioDisplay.innerHTML = (image.width / aspectDivisor) + ":" + (image.height / aspectDivisor);
+	// get exact aspect ratio
+	var imageDecimalAspect = image.width / image.height, closestRatio;
 
+	// display square
+	if (imageDecimalAspect == 1)
+	{
 		// display image orientation
-		if (image.width == image.height)
-			orientationDisplay.innerHTML = "Square";
+		orientationDisplay.innerHTML = "Square";
+		closestRatio = "1 x 1";
 	}
-	else
+	else if (imageDecimalAspect > 1)
 	{
-		var imageDecimalAspect = image.width / image.height;
+		// display image orientation
+		orientationDisplay.innerHTML = "Landscape";
 
-		if (imageDecimalAspect > 1)
-		{
-			// display image orientation
-			orientationDisplay.innerHTML = "Landscape";
-
-			// get closest aspect ratio and display it
-			var closestRatio = findClosestAspectRatio(imageDecimalAspect);
-			aspectRatioDisplay.innerHTML = "<font color=#823333>Suggested Ratio</font> " + closestRatio;
-		}
-		else
-		{
-			// display image orientation
-			orientationDisplay.innerHTML = "Portrait";
-
-			// get closest aspect ratio and display it
-			var closestRatio = findClosestAspectRatio(image.height / image.width);
-			aspectRatioDisplay.innerHTML = "<font color=#823333>Suggested Ratio: </font>" + closestRatio;
-		}
-
+		// get closest aspect ratio and display it
+		closestRatio = findClosestAspectRatio(imageDecimalAspect);
 	}
+	else if (imageDecimalAspect < 1)
+	{
+		// display image orientation
+		orientationDisplay.innerHTML = "Portrait";
+
+		// get closest aspect ratio and display it
+		closestRatio = findClosestAspectRatio(image.height / image.width);
+	}
+	printSizeDisplay.innerHTML = closestRatio;
 
 	// add up all RGB values and count white/transparent pixels that won't be printed
 	var rgb = [0, 0, 0], transparentPixels = 0, whitePixels = 0;
