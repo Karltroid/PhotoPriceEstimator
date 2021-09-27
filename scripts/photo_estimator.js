@@ -1,20 +1,21 @@
 const ASPECTRATIOS =
 [
-	"<span>4\" x 6\"</span><span>12\" x 18\"</span><span>24\" x 36\"</span>",
-	"5\" x 7\"",
-	"18\" x 24\"",
-	"8.5\" x 11\"",
-	"8\" x 10\""
+	[[4,6], [12,18], [24, 36]], // 1.50
+	[[5,7]], // 1.40
+	[[18,24]], // 1.33
+	[[8.5,11]], // 1.29
+	[[8, 10]] // 1.25
 ];
 
 const ASPECTRATIOS_DECIMAL =
 [
-	1.50,
-	1.40,
-	1.33,
-	1.29,
-	1.25
+	1.50, // 4x6, 12x18, 24x36
+	1.40, // 5x7
+	1.33, // 18x24
+	1.29, // 8.5x11
+	1.25  // 8x10
 ];
+
 
 
 window.addEventListener('load', function()
@@ -101,7 +102,13 @@ function displayImageData(image, colorData)
 		// get closest aspect ratio and display it
 		closestRatio = findClosestAspectRatio(image.height / image.width);
 	}
-	printSizeDisplay.innerHTML = closestRatio;
+
+	printSizeDisplay.innerHTML = ""; // clearing before appending new data
+	for (var i = 0; i < closestRatio.length; i++)
+	{
+		printSizeDisplay.innerHTML +=
+		 "<span>" + closestRatio[i][0] + "\"x" + closestRatio[i][1] + "\"</span>";
+	}
 
 	// add up all RGB values and count white/transparent pixels that won't be printed
 	var rgb = [0, 0, 0], transparentPixels = 0, whitePixels = 0;
