@@ -198,13 +198,9 @@ function getRecommendedPrintSizes(imageDecimalAspect)
 // gets the amount of pixels there are per inch of the given physical print size
 function getPixelsPerInch(imageWidth, imageHeight, physicalWidth, physicalHeight)
 {
-	console.log(imageWidth^2);
 	var pixelsHypotenuse = Math.sqrt(Math.pow(imageWidth, 2) + Math.pow(imageHeight, 2));
 	var physicalHypotenuse = Math.sqrt(Math.pow(physicalWidth, 2) + Math.pow(physicalHeight, 2));
 	var ppi = Math.round(pixelsHypotenuse / physicalHypotenuse);
-
-	console.log(pixelsHypotenuse);
-	console.log(physicalHypotenuse);
 
 	return ppi;
 }
