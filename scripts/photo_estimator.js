@@ -105,8 +105,10 @@ function displayImageData(image, colorData)
 	displayData(printSizeDisplay, "");
 	for (var i = 0; i < printSizes.length; i++)
 	{
+		var ppi = getPixelsPerInch(image.width, image.height, printSizes[i][0], printSizes[i][1]);
+
 		displayDataAppend(printSizeDisplay,
-			"<span>" + printSizes[i][0] + "\"x" + printSizes[i][1] + "\"</span>"
+			"<span>" + printSizes[i][0] + "\" x " + printSizes[i][1] + "\" (" + ppi + "ppi)</span>"
 		);
 	}
 
@@ -189,6 +191,22 @@ function getRecommendedPrintSizes(imageDecimalAspect)
 	}
 
 	return PRINTSIZES[closestAspectIndex];
+}
+
+
+
+// gets the amount of pixels there are per inch of the given physical print size
+function getPixelsPerInch(imageWidth, imageHeight, physicalWidth, physicalHeight)
+{
+	console.log(imageWidth^2);
+	var pixelsHypotenuse = Math.sqrt(Math.pow(imageWidth, 2) + Math.pow(imageHeight, 2));
+	var physicalHypotenuse = Math.sqrt(Math.pow(physicalWidth, 2) + Math.pow(physicalHeight, 2));
+	var ppi = Math.round(pixelsHypotenuse / physicalHypotenuse);
+
+	console.log(pixelsHypotenuse);
+	console.log(physicalHypotenuse);
+
+	return ppi;
 }
 
 
