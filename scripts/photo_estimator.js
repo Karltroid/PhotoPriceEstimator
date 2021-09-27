@@ -1,21 +1,22 @@
-const ASPECTRATIOS =
+const PRINTSIZES =
 [
+	[[4,4], [8,8]], // 1.00
 	[[4,6], [12,18], [24, 36]], // 1.50
 	[[5,7]], // 1.40
 	[[18,24]], // 1.33
 	[[8.5,11]], // 1.29
-	[[8, 10]] // 1.25
+	[[8,10]] // 1.25
 ];
 
-const ASPECTRATIOS_DECIMAL =
+const PRINTSIZES_RATIO =
 [
+	1.00, // 4x4, 8x8
 	1.50, // 4x6, 12x18, 24x36
 	1.40, // 5x7
 	1.33, // 18x24
 	1.29, // 8.5x11
 	1.25  // 8x10
 ];
-
 
 
 window.addEventListener('load', function()
@@ -68,46 +69,40 @@ function getImageData()
 	}
 }
 
+
 function displayImageData(image, colorData)
 {
-	// display image
+	// display image and resolution
 	imageDisplay.src = image.src;
+	displayData(resolutionDisplay, image.width + " x " + image.height);
 
-	// display resolution
-	resolutionDisplay.innerHTML = image.width + " x " + image.height;
-
-	// get exact aspect ratio
-	var imageDecimalAspect = image.width / image.height, closestRatio;
-
-	// display square
-	if (imageDecimalAspect == 1)
+	// get image orientation and all print sizes for the image's aspect ratio
+	var imageAspectRatio = image.width / image.height, printSizes, orientation;
+	if (imageAspectRatio > 1)
 	{
-		// display image orientation
-		orientationDisplay.innerHTML = "Square";
-		closestRatio = "1\" x 1\"";
+		orientation = "Landscape";
+		printSizes = getRecommendedPrintSizes(imageAspectRatio);
 	}
-	else if (imageDecimalAspect > 1)
+	else if (imageAspectRatio < 1)
 	{
-		// display image orientation
-		orientationDisplay.innerHTML = "Landscape";
-
-		// get closest aspect ratio and display it
-		closestRatio = findClosestAspectRatio(imageDecimalAspect);
+		orientation = "Portrait";
+		printSizes = getRecommendedPrintSizes(image.height / image.width);
 	}
-	else if (imageDecimalAspect < 1)
+	else
 	{
-		// display image orientation
-		orientationDisplay.innerHTML = "Portrait";
-
-		// get closest aspect ratio and display it
-		closestRatio = findClosestAspectRatio(image.height / image.width);
+		orientation = "Square";
+		printSizes = getRecommendedPrintSizes(1);
 	}
 
-	printSizeDisplay.innerHTML = ""; // clearing before appending new data
-	for (var i = 0; i < closestRatio.length; i++)
+	// display the image's oritentation (landscape, portrait, or square) and
+	// display each standard print size that matches the closest aspectratio
+	displayData(orientationDisplay, orientation);
+	displayData(printSizeDisplay, "");
+	for (var i = 0; i < printSizes.length; i++)
 	{
-		printSizeDisplay.innerHTML +=
-		 "<span>" + closestRatio[i][0] + "\"x" + closestRatio[i][1] + "\"</span>";
+		displayDataAppend(printSizeDisplay,
+			"<span>" + printSizes[i][0] + "\"x" + printSizes[i][1] + "\"</span>"
+		);
 	}
 
 	// add up all RGB values and count white/transparent pixels that won't be printed
@@ -135,42 +130,43 @@ function displayImageData(image, colorData)
 					Math.round(rgb[2] / countedPixels) ];
 
 	// display average rgb color of the image
-	averageRgbDisplay.innerHTML =
+	displayData(averageRgbDisplay,
 		"<font color=red>" + rgb[0] + "</font> : \
 		<font color=green>" + rgb[1] + "</font> : \
-		<font color=blue>" + rgb[2] + "</font>";
-
-	// convert rgb value to hex and display it
-	var hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
-	averageHexValueDisplay.innerHTML = hex;
+		<font color=blue>" + rgb[2] + "</font>"
+	);
 
 	// convert rgb to cmyk and display it
 	var cmyk = rgbToCmyk(rgb[0], rgb[1], rgb[2]);
-	averageCmykDisplay.innerHTML =
+	displayData(averageCmykDisplay,
 		"<font color=#0093d3>" + cmyk[0] + "</font>, \
 		<font color=#cc006b>" + cmyk[1] + "</font>, \
-		<font color=#bab109>" + cmyk[2] + "</font>, " + cmyk[3];
+		<font color=#bab109>" + cmyk[2] + "</font>, " + cmyk[3]
+	);
+
+	// convert rgb value to hex and display it
+	var hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
+	displayData(averageHexValueDisplay, hex);
 
 	// calculate and display the % of pixels that will be ignored during printing
-	ignoredPixelsDisplay.innerHTML =
-		((whitePixels + transparentPixels) / pixelAmount * 100).toFixed(2) + "%";
+	var ignoredPixels = ((whitePixels + transparentPixels) / pixelAmount * 100).toFixed(2) + "%";
+	displayData(ignoredPixelsDisplay, ignoredPixels);
 
 	// convert rgb to luminance and display it
-	luminanceDisplay.innerHTML =
-		(((0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2])) / 255 * 100).toFixed(2) + "%";
+	var luminance = (((0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2])) / 255 * 100).toFixed(2) + "%";
+	displayData(luminanceDisplay, luminance);
 }
 
 
-// loop through each aspectratio and return which one has the smallest
-// difference from the image's exact aspect ratio
-function findClosestAspectRatio(imageDecimalAspect)
+// find the closest supported aspect ratio to the image's exact aspect ratio
+// return the array of print sizes for that aspect ratio
+function getRecommendedPrintSizes(imageDecimalAspect)
 {
 	var closestAspectIndex = 0, closestAspectDifference = null;
 
-
-	for (var i = 0; i < ASPECTRATIOS_DECIMAL.length; i++)
+	for (var i = 0; i < PRINTSIZES_RATIO.length; i++)
 	{
-		var aspectDifference = Math.abs(ASPECTRATIOS_DECIMAL[i] - imageDecimalAspect);
+		var aspectDifference = Math.abs(PRINTSIZES_RATIO[i] - imageDecimalAspect);
 
 		if (closestAspectDifference == null || aspectDifference < closestAspectDifference)
 		{
@@ -179,7 +175,7 @@ function findClosestAspectRatio(imageDecimalAspect)
 		}
 	}
 
-	return ASPECTRATIOS[closestAspectIndex];
+	return PRINTSIZES[closestAspectIndex];
 }
 
 
@@ -241,4 +237,18 @@ function rgbToCmyk(r, g, b)
 	}
 
 	return [c, m, y, k];
+}
+
+
+// display's data into element's inner html
+function displayData(element, data)
+{
+	element.innerHTML = data;
+}
+
+
+// display's data into element's inner html while keeping the previous data
+function displayDataAppend(element, data)
+{
+	element.innerHTML += data;
 }
