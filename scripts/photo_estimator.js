@@ -19,6 +19,7 @@ const PRINTSIZES_RATIO =
 ];
 
 
+
 window.addEventListener('load', function()
 {
 	// declare all document element variables
@@ -33,6 +34,7 @@ window.addEventListener('load', function()
 	ignoredPixelsDisplay = document.getElementById('info-ignoredpixels');
 	luminanceDisplay = document.getElementById('info-luminance');
 });
+
 
 
 function getImageData()
@@ -70,14 +72,18 @@ function getImageData()
 }
 
 
+
 function displayImageData(image, colorData)
 {
 	// display image and resolution
 	imageDisplay.src = image.src;
 	displayData(resolutionDisplay, image.width + " x " + image.height);
 
+
 	// get image orientation and all print sizes for the image's aspect ratio
+	// and display both
 	var imageAspectRatio = image.width / image.height, printSizes, orientation;
+
 	if (imageAspectRatio > 1)
 	{
 		orientation = "Landscape";
@@ -94,9 +100,8 @@ function displayImageData(image, colorData)
 		printSizes = getRecommendedPrintSizes(1);
 	}
 
-	// display the image's oritentation (landscape, portrait, or square) and
-	// display each standard print size that matches the closest aspectratio
 	displayData(orientationDisplay, orientation);
+
 	displayData(printSizeDisplay, "");
 	for (var i = 0; i < printSizes.length; i++)
 	{
@@ -105,8 +110,12 @@ function displayImageData(image, colorData)
 		);
 	}
 
-	// add up all RGB values and count white/transparent pixels that won't be printed
+
+	// add up all value
+	// count white/transparent pixels that won't be printed
+	// get average rgb value (not including transparent pixels)
 	var rgb = [0, 0, 0], transparentPixels = 0, whitePixels = 0;
+
 	for (var i = 0; i < colorData.data.length; i += 4)
 	{
 		if (colorData.data[i+3] == 0)
@@ -122,19 +131,19 @@ function displayImageData(image, colorData)
 		rgb[2] += colorData.data[i+2];
 	}
 
-	// get average rgb color of the image
 	var pixelAmount = colorData.data.length / 4;
 	var countedPixels = pixelAmount - transparentPixels;
+
 	rgb = [ Math.round(rgb[0] / countedPixels),
 					Math.round(rgb[1] / countedPixels),
 					Math.round(rgb[2] / countedPixels) ];
 
-	// display average rgb color of the image
 	displayData(averageRgbDisplay,
 		"<font color=red>" + rgb[0] + "</font> : \
 		<font color=green>" + rgb[1] + "</font> : \
 		<font color=blue>" + rgb[2] + "</font>"
 	);
+
 
 	// convert rgb to cmyk and display it
 	var cmyk = rgbToCmyk(rgb[0], rgb[1], rgb[2]);
@@ -144,18 +153,22 @@ function displayImageData(image, colorData)
 		<font color=#bab109>" + cmyk[2] + "</font>, " + cmyk[3]
 	);
 
+
 	// convert rgb value to hex and display it
 	var hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
 	displayData(averageHexValueDisplay, hex);
+
 
 	// calculate and display the % of pixels that will be ignored during printing
 	var ignoredPixels = ((whitePixels + transparentPixels) / pixelAmount * 100).toFixed(2) + "%";
 	displayData(ignoredPixelsDisplay, ignoredPixels);
 
+
 	// convert rgb to luminance and display it
 	var luminance = (((0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2])) / 255 * 100).toFixed(2) + "%";
 	displayData(luminanceDisplay, luminance);
 }
+
 
 
 // find the closest supported aspect ratio to the image's exact aspect ratio
@@ -179,11 +192,13 @@ function getRecommendedPrintSizes(imageDecimalAspect)
 }
 
 
+
 // recursively find the largest number that divides into the two numbers
 function gcd(a, b)
 {
 	return (b == 0) ? a : gcd(b, a%b);
 }
+
 
 
 // convert an individual component of an rgb value to hex
@@ -194,6 +209,7 @@ function colorToHex(c)
 }
 
 
+
 // convert r, g, and b into hex and stich them together for the full hex value
 function rgbToHex(r, g, b)
 {
@@ -201,6 +217,7 @@ function rgbToHex(r, g, b)
 					><font color=green>" + colorToHex(g) + "</font\
 					><font color=blue>" + colorToHex(b) + "</font>";
 }
+
 
 
 // convert the rgb value into cmyk
@@ -240,11 +257,13 @@ function rgbToCmyk(r, g, b)
 }
 
 
+
 // display's data into element's inner html
 function displayData(element, data)
 {
 	element.innerHTML = data;
 }
+
 
 
 // display's data into element's inner html while keeping the previous data
