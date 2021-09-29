@@ -18,9 +18,9 @@ const PRINTSIZES_RATIO =
 	1.25  // 8x10
 ];
 
-const MEGAPIXEL = 1000000;
+const MEGAPIXEL = 1000000; // 1MP = 1,000,000 pixels
 
-
+var imageCanvas;
 
 window.addEventListener('load', function()
 {
@@ -62,7 +62,10 @@ function getImageData()
 			// draw image to canvas and get color data
 			var context = imageCanvas.getContext('2d');
 			context.drawImage(image, 0, 0);
-			var colorData = context.getImageData(0, 0, this.width-1, this.height-1);
+			var colorData = context.getImageData(0, 0, this.width, this.height);
+
+			// display (work in progress) crop selection box
+			cropOverlay.style.display = "block";
 
 			// calculate and display image data (resolution, aspectratio, color data, ...)
 			displayImageData(image, colorData);

@@ -11,14 +11,19 @@
 
 		<!-- scripts and stylesheets -->
 		<script type="text/javascript" src="scripts/photo_estimator.js"></script>
+		<script type="text/javascript" src="scripts/photo_crop.js"></script>
 		<link rel="stylesheet" href="styles/mainstyles.css" />
 	</head>
 	<body>
-		<div id="container" class="centered-block">
+		<div id="site-container" class="centered-block">
 			<h1 class="pushdown">Photo Printing Price Estimator</h1>
 
 			<input type="file" accept="image/*" class="pushdown centered-block" onchange="getImageData()" />
-			<canvas id="userimage" class="pushdown"></canvas>
+
+			<div id="image-display-container" class="pushdown">
+				<div id="crop-selection-overlay" class="hide"></div>
+				<canvas id="userimage"></canvas>
+			</div>
 
 			<table id="photo-information" class="pushdown">
 				<tr>

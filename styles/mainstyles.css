@@ -8,7 +8,7 @@
   src: url('../fonts/productsans_bold.ttf');
 }
 
-#container
+#site-container
 {
   box-sizing: border-box;
   width: 70%;
@@ -39,20 +39,9 @@ input
 	width: 300px;
 	margin-bottom: 15px;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-input, #userimage
-{
   box-sizing: border-box;
   background: rgba(0, 0, 0, 0.1);
 	border-radius: 12px;
-}
-
-#userimage
-{
-	width: 100%;
-	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-	border: 3px solid rgba(0, 0, 0, 0.15);
 }
 
 #photo-information table
@@ -86,6 +75,40 @@ input, #userimage
   margin: 0 0 4px 4px;
   background: rgba(0, 0, 0, .125);
   border-radius: 3px;
+}
+
+#image-display-container
+{
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+	border: 3px solid rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+}
+
+#userimage
+{
+  width: 100%;
+  display: block;
+}
+
+#crop-selection-overlay
+{
+  box-sizing: border-box;
+  width: calc(4% * 12);
+  height: calc(6% * 12);
+  background: rgba(255,255,255,.2);
+  border: 3px dashed rgba(255,255,255,.2);
+  position: absolute;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  border-radius: 3px;
+}
+#crop-selection-overlay:hover
+{
+  border: 3px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.3);
+  cursor: pointer;
 }
 
 footer
@@ -122,7 +145,7 @@ footer a:hover
 
 @media only screen and (max-width: 700px)
 {
-	#container
+	#site-container
 	{
     width: 100%;
     padding: 21px;
