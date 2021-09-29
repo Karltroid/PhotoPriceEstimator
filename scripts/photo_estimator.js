@@ -18,13 +18,14 @@ const PRINTSIZES_RATIO =
 	1.25  // 8x10
 ];
 
+const MEGAPIXEL = 1000000;
+
 
 
 window.addEventListener('load', function()
 {
 	// declare all document element variables
-	imageDisplay = document.getElementById('userimage');
-	imageCanvas = document.getElementById('userimage-canvas');
+	imageCanvas = document.getElementById('userimage');
 	resolutionDisplay = document.getElementById('info-resolution');
 	printSizeDisplay = document.getElementById('info-printsize');
 	orientationDisplay = document.getElementById('info-orientation');
@@ -75,9 +76,9 @@ function getImageData()
 
 function displayImageData(image, colorData)
 {
-	// display image and resolution
-	imageDisplay.src = image.src;
-	displayData(resolutionDisplay, image.width + " x " + image.height);
+	// display resolution / mega pixels
+	var megaPixels = (image.width * image.height / MEGAPIXEL).toFixed(2);
+	displayData(resolutionDisplay, image.width + " x " + image.height + " (" + megaPixels + "MP)");
 
 
 	// get image orientation and all print sizes for the image's aspect ratio
