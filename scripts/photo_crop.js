@@ -7,7 +7,7 @@ window.addEventListener('load', function()
 {
   // get needed page elements
   cropOverlay = document.getElementById('crop-selection-overlay');
-
+  croppedImageDisplay = document.getElementById('cropped-image');
 
   // create events
   cropOverlay.addEventListener('pointerdown', function(e)
@@ -73,16 +73,15 @@ function setCropBoxSize(photosize)
     adjustedHeight = aspectratio * imageCanvas.offsetWidth;
     adjustedWidth = adjustedHeight / aspectratio;
   }
-  else if (adjustedWidth == imageCanvas.offsetWidth && adjustedHeight == imageCanvas.offsetHeight)
-  {
-    cropOverlay.style.display = "hidden";
-  }
 
+  // set crop overlay to the calculated width and height
   cropOverlay.style.width = adjustedWidth + "px";
   cropOverlay.style.height = adjustedHeight + "px";
 
+  // save current photo size for if the page resizes and this function needs to be run again
   currentPhotoSize = photosize;
 
+  // move resized crop box if it is now overflowing past the canvas
   checkCropBoxPosition();
 }
 
@@ -124,4 +123,36 @@ function cropUnclick()
 function setSelectedOption()
 {
 
+}
+
+
+function createCroppedImage()
+{
+  var ctx = imageCanvas.getContext('2d');
+
+  // get image data (left, top, width, height)
+  var leftCrop = cropOverlay.offsetLeft / imageCanvas.offsetWidth * imageCanvas.width;
+  var topCrop = cropOverlay.offsetTop / imageCanvas.offsetHeight * imageCanvas.height;
+  var cropWidth = cropOverlay.offsetWidth / imageCanvas.offsetWidth * imageCanvas.width;
+  var cropHeight = cropOverlay.offsetHeight / imageCanvas.offsetHeight * imageCanvas.height;
+
+  console.log("Width: " + cropOverlay.offsetWidth + " / " + imageCanvas.offsetWidth + " * " + imageCanvas.width);
+  console.log("Height: " + cropOverlay.offsetHeight + " / " + imageCanvas.offsetHeight + " * " + imageCanvas.height);
+
+  var croppedImageData = ctx.getImageData(leftCrop, topCrop, cropWidth, cropHeight);
+
+  // create image element
+  var MyImage = new Image();
+  MyImage.src = getImageURL(croppedImageData, cropWidth, cropHeight);
+
+  croppedImageDisplay.src = MyImage.src;
+}
+
+function getImageURL(imgData, width, height) {
+   var canvas = document.createElement('canvas');
+   var ctx = canvas.getContext('2d');
+   canvas.width = width;
+   canvas.height = height;
+   ctx.putImageData(imgData, 0, 0);
+   return canvas.toDataURL(); //image URL
 }
