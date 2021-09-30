@@ -66,9 +66,6 @@ function getImageData()
 			context.drawImage(image, 0, 0);
 			var colorData = context.getImageData(0, 0, this.width, this.height);
 
-			// display (work in progress) crop selection box
-			cropOverlay.style.display = "block";
-
 			// calculate and display image data (resolution, aspectratio, color data, ...)
 			displayImageData(image, colorData);
 		};

@@ -58,6 +58,7 @@ function setCropBoxSize(photosize)
   var aspectratio;
   var adjustedWidth, adjustedHeight;
 
+  // display crop selection box
   cropOverlay.style.display = "block";
 
   aspectratio = photosize[1]/photosize[0];
