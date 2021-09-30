@@ -10,32 +10,17 @@ window.addEventListener('load', function()
 
 
   // create events
-  cropOverlay.addEventListener('mousedown', function(e)
+  cropOverlay.addEventListener('pointerdown', function(e)
   {
     cropClick(e);
   }, true);
 
-  document.addEventListener('mousemove', function(event)
+  document.addEventListener('pointermove', function(event)
   {
     cropMove();
   }, true);
 
-  document.addEventListener('mouseup', function()
-  {
-    cropUnclick();
-  }, true);
-
-  cropOverlay.addEventListener('touchstart', function(e)
-  {
-    cropClick(e);
-  }, true);
-
-  document.addEventListener('touchmove', function(event)
-  {
-    cropMove();
-  }, true);
-
-  document.addEventListener('touchend', function()
+  document.addEventListener('pointerup', function()
   {
     cropUnclick();
   }, true);
