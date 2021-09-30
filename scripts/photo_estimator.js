@@ -114,9 +114,18 @@ function displayImageData(image, colorData)
 
 			if (PRINTSIZES[i] == printSizes)
 			{
-				displayDataAppend(printSizeOption,
-					"<button class=\"recommended-option\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
-				);
+				if (ppi >= 300)
+				{
+					displayDataAppend(printSizeOption,
+						"<button class=\"very-recommended-option\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
+					);
+				}
+				else
+				{
+					displayDataAppend(printSizeOption,
+						"<button class=\"recommended-option\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
+					);
+				}
 			}
 			else {
 				displayDataAppend(printSizeOption,

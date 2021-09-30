@@ -96,8 +96,9 @@ button
   border-radius: 3px;
   background: rgba(0, 0, 0, .125);
   border: none;
-  margin: 4px;
+  margin: 4px 5px;
   padding: 8px 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
 button:hover
@@ -187,9 +188,16 @@ footer a:hover
   border: 3px solid rgba(0,0,0,.2);
 }
 
+.very-recommended-option
+{
+  box-shadow: 0 3px 6px rgba(69, 173, 66,.16), 0 3px 6px rgba(69, 173, 66, .23);
+  border: 3px solid rgb(69, 173, 66) !important;
+}
+
 .recommended-option
 {
-  border: 3px solid rgb(209, 187, 77) !important;
+  box-shadow: 0 3px 6px rgba(230, 221, 57, .16), 0 3px 6px rgba(230, 221, 57, .23);
+  border: 2px solid rgb(230, 221, 57) !important;
 }
 
 @media only screen and (max-width: 700px)
