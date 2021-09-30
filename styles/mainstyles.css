@@ -23,14 +23,23 @@ body
 	margin: 0;
 	padding: 0;
 	font-family: productsans;
-	text-align: center;
 	background: rgb(245, 245, 245);
+}
+
+h1
+{
+  text-align: center;
+  margin: 0;
+}
+
+h2
+{
+  margin: 0 0 8px 0;
 }
 
 h1,h2,h3
 {
 	font-family: productsans_bold;
-	margin-top: 0;
 }
 
 input
@@ -44,37 +53,57 @@ input
 	border-radius: 12px;
 }
 
-#photo-information table
+table
 {
   box-sizing: border-box;
   table-layout: auto;
 	width: 100%;
 }
 
-#photo-information tr td:first-child
+tr td:first-child
 {
   text-align: left;
   font-family: productsans_bold;
 }
 
-#photo-information tr td:last-child
+tr td:last-child
 {
   text-align: right;
 }
 
-#photo-information td
+td
 {
 	width: 1%;
   padding: 6px 0;
 }
 
-#info-printsize span
+td span
 {
   display: inline-block;
   padding: 0 4px;
   margin: 0 0 4px 4px;
   background: rgba(0, 0, 0, .125);
   border-radius: 3px;
+}
+
+#printsize
+{
+    text-align: left;
+}
+
+#option-printsize button
+{
+  border-radius: 3px;
+  background: rgba(0, 0, 0, .125);
+  border: none;
+  margin: 4px;
+  padding: 8px 12px;
+}
+
+#option-printsize button:hover
+{
+  background: rgba(0, 0, 0, .25);
+  cursor: pointer;
 }
 
 #image-display-container
@@ -103,6 +132,7 @@ input
   position: absolute;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   border-radius: 3px;
+  object-fit: cover;
 }
 #crop-selection-overlay:hover
 {
@@ -114,6 +144,7 @@ input
 footer
 {
   color: rgba(0,0,0,.65);
+  text-align: center;
 }
 
 footer a
@@ -135,12 +166,22 @@ footer a:hover
 
 .pushdown
 {
-	margin-bottom: 21px;
+	margin-bottom: 30px;
 }
 
 .hide
 {
   display: none;
+}
+
+.selected-option
+{
+  border: 3px solid rgba(0,0,0,.2);
+}
+
+.recommended-option
+{
+  border: 3px solid rgb(209, 187, 77) !important;
 }
 
 @media only screen and (max-width: 700px)

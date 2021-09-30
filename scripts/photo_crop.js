@@ -1,6 +1,6 @@
 var cropOverlay; // page elements
 var isDown = false;
-
+var currentPhotoSize = [6, 4];
 
 
 window.addEventListener('load', function()
@@ -25,9 +25,24 @@ window.addEventListener('load', function()
     cropUnclick();
   }, true);
 
+  cropOverlay.addEventListener('touchstart', function(e)
+  {
+    cropClick(e);
+  }, true);
+
+  document.addEventListener('touchmove', function(event)
+  {
+    cropMove();
+  }, true);
+
+  document.addEventListener('touchend', function()
+  {
+    cropUnclick();
+  }, true);
+
   window.addEventListener('resize', function()
   {
-    checkCropBoxPosition();
+    setCropBoxSize(currentPhotoSize);
   }, true);
 
 
@@ -52,6 +67,38 @@ function checkCropBoxPosition()
     cropOverlay.style.top = imageCanvas.offsetTop + imageCanvas.offsetHeight - cropOverlay.offsetHeight + "px";
 }
 
+
+function setCropBoxSize(photosize)
+{
+  var aspectratio;
+  var adjustedWidth, adjustedHeight;
+
+  cropOverlay.style.display = "block";
+
+  aspectratio = photosize[1]/photosize[0];
+
+  // scale to fit width
+  adjustedWidth = aspectratio * imageCanvas.offsetHeight;
+  adjustedHeight = adjustedWidth / aspectratio;
+
+  // if overflowing, scale to fit height
+  if (adjustedWidth > imageCanvas.offsetWidth || adjustedHeight > imageCanvas.offsetHeight)
+  {
+    adjustedHeight = aspectratio * imageCanvas.offsetWidth;
+    adjustedWidth = adjustedHeight / aspectratio;
+  }
+  else if (adjustedWidth == imageCanvas.offsetWidth && adjustedHeight == imageCanvas.offsetHeight)
+  {
+    cropOverlay.style.display = "hidden";
+  }
+
+  cropOverlay.style.width = adjustedWidth + "px";
+  cropOverlay.style.height = adjustedHeight + "px";
+
+  currentPhotoSize = photosize;
+
+  checkCropBoxPosition();
+}
 
 
 function cropClick(e)
@@ -84,4 +131,11 @@ function cropMove(x = event.clientX, y = event.clientY)
 function cropUnclick()
 {
   isDown = false;
+}
+
+
+
+function setSelectedOption()
+{
+
 }

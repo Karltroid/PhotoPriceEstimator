@@ -34,6 +34,8 @@ window.addEventListener('load', function()
 	averageCmykDisplay = document.getElementById('info-averagecmyk');
 	ignoredPixelsDisplay = document.getElementById('info-ignoredpixels');
 	luminanceDisplay = document.getElementById('info-luminance');
+
+	printSizeOption = document.getElementById('option-printsize');
 });
 
 
@@ -106,15 +108,38 @@ function displayImageData(image, colorData)
 
 	displayData(orientationDisplay, orientation);
 
-	displayData(printSizeDisplay, "");
-	for (var i = 0; i < printSizes.length; i++)
+	displayData(printSizeOption, "");
+	for (var i = 0; i < PRINTSIZES.length; i++)
+	{
+		for(var x = 0; x < PRINTSIZES[i].length; x++)
+		{
+			var ppi = getPixelsPerInch(image.width, image.height, PRINTSIZES[i][x][0], PRINTSIZES[i][x][1]);
+
+			if (PRINTSIZES[i] == printSizes)
+			{
+				displayDataAppend(printSizeOption,
+					"<button class=\"recommended-option\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
+				);
+			}
+			else {
+				displayDataAppend(printSizeOption,
+					"<button onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
+				);
+			}
+
+		}
+	}
+	/*for (var i = 0; i < printSizes.length; i++)
 	{
 		var ppi = getPixelsPerInch(image.width, image.height, printSizes[i][0], printSizes[i][1]);
 
-		displayDataAppend(printSizeDisplay,
-			"<span>" + printSizes[i][0] + "\" x " + printSizes[i][1] + "\" (" + ppi + "ppi)</span>"
+		displayDataAppend(printSizeOption,
+			"<button onclick=\"setCropBoxSize([" + printSizes[i] + "])\">" + printSizes[i][0] + "\" x " + printSizes[i][1] + "\" (" + ppi + "ppi)</button>"
 		);
-	}
+	}*/
+	displayDataAppend(printSizeOption,
+		"<button onclick=\"setCropBoxSize()\">Custom</button>"
+	);
 
 
 	// add up all value

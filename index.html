@@ -18,13 +18,23 @@
 		<div id="site-container" class="centered-block">
 			<h1 class="pushdown">Photo Printing Price Estimator</h1>
 
-			<input type="file" accept="image/*" class="pushdown centered-block" onchange="getImageData()" />
+			<h2>Step 1: Select an image</h2>
+			<input type="file" accept="image/*" class="pushdown" onchange="getImageData()" />
 
+			<div id="printsize" class="pushdown">
+				<h2>Step 2: Choose a photo size</h2>
+				<div id="option-printsize">
+					<font color=gray>Select an image first</font>
+				</div>
+			</div>
+
+			<h2>Step 3: Adjust crop</h2>
 			<div id="image-display-container" class="pushdown">
 				<div id="crop-selection-overlay" class="hide"></div>
 				<canvas id="userimage"></canvas>
 			</div>
 
+			<h2 style="text-align: center;">Image information</h2>
 			<table id="photo-information" class="pushdown">
 				<tr>
 					<td>Orientation</td>
@@ -33,10 +43,6 @@
 				<tr>
 					<td>Resolution</td>
 					<td id="info-resolution">...</td>
-				</tr>
-				<tr>
-					<td>Suggested Print Size(s)</td>
-					<td id="info-printsize">...</td>
 				</tr>
 				<tr>
 					<td>Average RGB Value</td>
