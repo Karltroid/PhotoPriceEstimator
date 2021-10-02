@@ -20,7 +20,7 @@ const PRINTSIZES_RATIO =
 
 const MEGAPIXEL = 1000000; // 1MP = 1,000,000 pixels
 
-var imageCanvas;
+var image, imageCanvas;
 
 window.addEventListener('load', function()
 {
@@ -42,7 +42,7 @@ window.addEventListener('load', function()
 
 function getImageData()
 {
-	var file, image;
+	var file;
 
 	if (file = event.target.files[0]) // check if file exists and is fine
 	{
@@ -67,7 +67,7 @@ function getImageData()
 			var colorData = context.getImageData(0, 0, this.width, this.height);
 
 			// calculate and display image data (resolution, aspectratio, color data, ...)
-			displayImageData(image, colorData);
+			displayImageData(colorData);
 		};
 
 		image.src = URL.createObjectURL(file);
@@ -76,7 +76,7 @@ function getImageData()
 
 
 
-function displayImageData(image, colorData)
+function displayImageData(colorData)
 {
 	// display resolution / mega pixels
 	var megaPixels = (image.width * image.height / MEGAPIXEL).toFixed(2);
@@ -110,7 +110,9 @@ function displayImageData(image, colorData)
 	{
 		for(var x = 0; x < PRINTSIZES[i].length; x++)
 		{
-			var ppi = getPixelsPerInch(image.width, image.height, PRINTSIZES[i][x][0], PRINTSIZES[i][x][1]);
+			var croppedResolution = getCroppedResolution(PRINTSIZES[i][x]);
+
+			var ppi = getPixelsPerInch(croppedResolution.x, croppedResolution.y, PRINTSIZES[i][x][0], PRINTSIZES[i][x][1]);
 
 			if (PRINTSIZES[i] == printSizes)
 			{
@@ -135,14 +137,6 @@ function displayImageData(image, colorData)
 
 		}
 	}
-	/*for (var i = 0; i < printSizes.length; i++)
-	{
-		var ppi = getPixelsPerInch(image.width, image.height, printSizes[i][0], printSizes[i][1]);
-
-		displayDataAppend(printSizeOption,
-			"<button onclick=\"setCropBoxSize([" + printSizes[i] + "])\">" + printSizes[i][0] + "\" x " + printSizes[i][1] + "\" (" + ppi + "ppi)</button>"
-		);
-	}*/
 	displayDataAppend(printSizeOption,
 		"<button onclick=\"setCropBoxSize()\">Custom</button>"
 	);
