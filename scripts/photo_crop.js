@@ -71,6 +71,22 @@ function cropUnclick()
 
 
 
+function setCustomCropBoxSize()
+{
+  var customHeight = document.getElementById("custom-height").value;
+  var customWidth = document.getElementById("custom-width").value;
+
+  var croppedResolution = getCroppedResolution([customHeight, customWidth]);
+  var ppi = getPixelsPerInch(croppedResolution.x, croppedResolution.y, customHeight, customWidth);
+
+  document.getElementById("custom-ppi").innerHTML = "(" + ppi + "ppi)";
+
+  currentPhotoSize = [customHeight, customWidth];
+  setCropBoxSize([customHeight, customWidth]);
+}
+
+
+
 function setCropBoxSize(photosize)
 {
   var aspectratio;
@@ -79,18 +95,25 @@ function setCropBoxSize(photosize)
   // display crop selection box
   cropOverlay.style.display = "block";
 
-  aspectratio = photosize[1]/photosize[0];
-
   // scale to fit width
+  aspectratio = photosize[1]/photosize[0];
   adjustedWidth = aspectratio * imageCanvas.offsetHeight;
   adjustedHeight = adjustedWidth / aspectratio;
 
   // if overflowing, scale to fit height
   if (adjustedWidth > imageCanvas.offsetWidth || adjustedHeight > imageCanvas.offsetHeight)
   {
+    aspectratio = photosize[0]/photosize[1];
     adjustedHeight = aspectratio * imageCanvas.offsetWidth;
     adjustedWidth = adjustedHeight / aspectratio;
+
+    // if still overflowing, change canvas size to fit crop selection instead and fill image to newly sized canvas
+    if (adjustedWidth > imageCanvas.offsetWidth || adjustedHeight > imageCanvas.offsetHeight)
+    {
+      console.log("CANT FIT");
+    }
   }
+
 
   // set crop overlay to the calculated width and height
   cropOverlay.style.width = adjustedWidth + "px";
@@ -144,17 +167,16 @@ function createCroppedImage()
 
 function getCroppedResolution(photosize)
 {
-  // get decimal aspect ratio for scaling
-  var aspectratio = photosize[1]/photosize[0];
-
 	// get crop resolution scaled to fit width
-	var croppedWidth = aspectratio * image.height;
+  var aspectratio = photosize[1]/photosize[0];
+  var croppedWidth = aspectratio * image.height;
   var croppedHeight = croppedWidth / aspectratio;
 
   // if overflowing, get crop resolution scaled to fit height
   if (croppedWidth > image.width || croppedHeight > image.height)
   {
-		croppedHeight = aspectratio * image.width;
+    var aspectratio = photosize[0]/photosize[1];
+    croppedHeight = aspectratio * image.width;
     croppedWidth = croppedHeight / aspectratio;
   }
 

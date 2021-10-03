@@ -138,7 +138,11 @@ function displayImageData(colorData)
 		}
 	}
 	displayDataAppend(printSizeOption,
-		"<button onclick=\"setCropBoxSize()\">Custom</button>"
+		"<button onclick=\"setCustomCropBoxSize()\">Custom: \
+			<input id=\"custom-height\" type=\"number\" min=\"1\" max=\"1000\" /><font size=4>\"</font> x \
+			<input id=\"custom-width\" type=\"number\" min=\"1\" max=\"1000\" /><font size=4>\"</font>\
+			<span id=\"custom-ppi\">(? ppi)</span>\
+		</button>"
 	);
 
 
