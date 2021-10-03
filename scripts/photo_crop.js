@@ -124,33 +124,20 @@ function checkCropBoxPosition()
 
 function createCroppedImage()
 {
-
-
-  var ctx = imageCanvas.getContext('2d');
-
   // get crop image data (left point, top point, resolution)
   var leftCrop = cropOverlay.offsetLeft / imageCanvas.offsetWidth * imageCanvas.width;
   var topCrop = cropOverlay.offsetTop / imageCanvas.offsetHeight * imageCanvas.height;
   var croppedResolution = getCroppedResolution(currentPhotoSize);
 
-  // get cropped image data
+  // get the current data of the main image canvas
+  // get the image data of the cropped portion of the main image canvas
+  var ctx = imageCanvas.getContext('2d');
   var croppedImageData = ctx.getImageData(leftCrop, topCrop, croppedResolution.x, croppedResolution.y);
 
   // create image url from data amnd display it
   var croppedImage = new Image();
   croppedImage.src = getImageURL(croppedImageData, croppedResolution.x, croppedResolution.y);
   croppedImageDisplay.src = croppedImage.src;
-}
-
-
-function getImageURL(imgData, width, height)
-{
-   var canvas = document.createElement('canvas');
-   var ctx = canvas.getContext('2d');
-   canvas.width = width;
-   canvas.height = height;
-   ctx.putImageData(imgData, 0, 0);
-   return canvas.toDataURL(); //image URL
 }
 
 
@@ -176,4 +163,16 @@ function getCroppedResolution(photosize)
 		x: croppedWidth,
 		y: croppedHeight
 	};
+}
+
+
+
+function getImageURL(imgData, width, height)
+{
+   var canvas = document.createElement('canvas');
+   var ctx = canvas.getContext('2d');
+   canvas.width = width;
+   canvas.height = height;
+   ctx.putImageData(imgData, 0, 0);
+   return canvas.toDataURL(); //image URL
 }
