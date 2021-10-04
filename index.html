@@ -10,16 +10,18 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<!-- scripts and stylesheets -->
+		<script type="text/javascript" src="scripts/libraries/tiff.min.js"></script>
 		<script type="text/javascript" src="scripts/photo_estimator.js"></script>
 		<script type="text/javascript" src="scripts/photo_crop.js"></script>
 		<link rel="stylesheet" href="styles/mainstyles.css" />
 	</head>
 	<body>
 		<div id="site-container" class="centered-block">
+			<div id="output"></div>
 			<h1 class="pushdown">Photo Printing Price Estimator</h1>
 
 			<h2>Step 1: Select an image</h2>
-			<input type="file" accept="image/*" class="pushdown" onchange="getImageData()" />
+			<input id="user-input" type="file" class="pushdown" onchange="getImageData(this)" />
 
 			<div id="printsize" class="pushdown">
 				<h2>Step 2: Choose a photo size</h2>
@@ -31,7 +33,7 @@
 			<h2>Step 3: Adjust crop</h2>
 			<div id="image-display-container" class="pushdown">
 				<div id="crop-selection-overlay" class="hide">
-					<button id="crop-rotate-button" class="boxshadow-thin" onclick="rotateCrop()"><img src="images/rotate.png" alt="Rotate Crop"/></button>
+					<button id="crop-rotate-button" onclick="rotateCrop()"><img src="images/rotate.png" alt="Rotate Crop"/></button>
 				</div>
 				<canvas id="userimage"></canvas>
 			</div>

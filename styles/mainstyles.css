@@ -199,11 +199,6 @@ footer a:hover
   border: 2px solid rgb(230, 221, 57) !important;
 }
 
-.boxshadow-thin
-{
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
 #crop-rotate-button
 {
   position: relative;
@@ -213,7 +208,7 @@ footer a:hover
   max-width: 500px;
   min-width: 50px;
   padding: 12px 12px 8px;
-
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   transform: translate(-50%, -50%);
   background-color: rgba(0,0,0,.2);
   border-radius: 10px;

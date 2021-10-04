@@ -39,15 +39,54 @@ window.addEventListener('load', function()
 });
 
 
-
-function getImageData()
+function getImageData(input)
 {
-	var file;
+	image = new Image();
 
-	if (file = event.target.files[0]) // check if file exists and is fine
+	let file;
+
+	// get file, return if error getting file
+	if (!(file = event.target.files[0]))
 	{
-		image = new Image();
+		alert("Error loading file");
+		return;
+	}
 
+	// using https://github.com/seikichi/tiff.js to load unsupported tiff files into canvas
+	if (file.type == "image/tiff")
+	{
+		var reader = new FileReader();
+
+		reader.onload = (function (theFile) {
+			return function (e) {
+				var buffer = e.target.result;
+				var tiff = new Tiff({buffer: buffer});
+				var tiffCanvas = tiff.toCanvas();
+				if (tiffCanvas)
+				{
+					// prepare canvas for drawing
+					image.width = tiff.width();
+					image.height = tiff.height();
+					imageCanvas.width = tiff.width();
+					imageCanvas.height = tiff.height();
+
+					// draw image to canvas and get color data
+					var context = imageCanvas.getContext('2d');
+					context.drawImage(tiffCanvas, 0, 0);
+					var colorData = context.getImageData(0, 0, image.width, image.height);
+
+					// calculate and display image data (resolution, aspectratio, color data, ...)
+					displayImageData(colorData);
+				}
+			};
+		})(file);
+
+		reader.readAsArrayBuffer(file);
+	}
+
+	// for regular/supported images, load normally
+	else
+	{
 		image.onerror = function()
 		{
 			// alert the user that their image file is not supported
