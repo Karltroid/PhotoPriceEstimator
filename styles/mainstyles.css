@@ -129,7 +129,6 @@ button:hover
   background: rgba(255,255,255,.2);
   border: 3px dashed rgba(255,255,255,.2);
   position: absolute;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   border-radius: 3px;
   object-fit: cover;
   touch-action: none;
@@ -198,6 +197,45 @@ footer a:hover
 {
   box-shadow: 0 3px 6px rgba(230, 221, 57, .16), 0 3px 6px rgba(230, 221, 57, .23);
   border: 2px solid rgb(230, 221, 57) !important;
+}
+
+.boxshadow-thin
+{
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+#crop-rotate-button
+{
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 15%;
+  max-width: 500px;
+  min-width: 50px;
+  padding: 12px 12px 8px;
+
+  transform: translate(-50%, -50%);
+  background-color: rgba(0,0,0,.2);
+  border-radius: 10px;
+}
+
+#crop-rotate-button:hover
+{
+  background-color: rgba(0,0,0,.4);
+  transition: .25s;
+}
+
+#crop-rotate-button img
+{
+  pointer-events: none;
+  width: 100%;
+  opacity: 65%;
+}
+
+#crop-rotate-button:hover img
+{
+  opacity: 100%;
+  transition: .25s;
 }
 
 input[type=number]

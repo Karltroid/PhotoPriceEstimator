@@ -165,6 +165,14 @@ function createCroppedImage()
 
 
 
+function rotateCrop()
+{
+  currentPhotoSize = [currentPhotoSize[1], currentPhotoSize[0]];
+  setCropBoxSize(currentPhotoSize);
+}
+
+
+
 function getCroppedResolution(photosize)
 {
 	// get crop resolution scaled to fit width
