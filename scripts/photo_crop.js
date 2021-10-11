@@ -1,3 +1,23 @@
+const PRINTSIZES =
+[
+	[[4,4], [8,8]], // 1.00
+	[[4,6], [12,18], [24, 36]], // 1.50
+	[[5,7]], // 1.40
+	[[18,24]], // 1.33
+	[[8.5,11]], // 1.29
+	[[8,10]] // 1.25
+];
+
+const PRINTSIZES_RATIO =
+[
+	1.00, // 4x4, 8x8
+	1.50, // 4x6, 12x18, 24x36
+	1.40, // 5x7
+	1.33, // 18x24
+	1.29, // 8.5x11
+	1.25  // 8x10
+];
+
 var cropOverlay; // page elements
 var isDown = false;
 var currentPhotoSize = [6, 4];
@@ -175,17 +195,27 @@ function rotateCrop()
 
 function getCroppedResolution(photosize)
 {
-	// get crop resolution scaled to fit width
-  var aspectratio = photosize[1]/photosize[0];
-  var croppedWidth = aspectratio * image.height;
-  var croppedHeight = croppedWidth / aspectratio;
+  var aspectRatio, croppedWidth, croppedHeight;
 
-  // if overflowing, get crop resolution scaled to fit height
-  if (croppedWidth > image.width || croppedHeight > image.height)
+  if (newPhotoOrder.orientation == "Landscape")
   {
-    var aspectratio = photosize[0]/photosize[1];
-    croppedHeight = aspectratio * image.width;
-    croppedWidth = croppedHeight / aspectratio;
+    // get crop resolution scaled to fit width
+    aspectRatio = photosize[1] / photosize[0];
+    croppedWidth = aspectRatio * newPhotoOrder.height;
+    croppedHeight = croppedWidth / aspectRatio;
+  }
+  else if (newPhotoOrder.orientation == "Portrait")
+  {
+    // get crop resolution scaled to fit height
+    aspectRatio = photosize[0] / photosize[1];
+    croppedHeight = aspectRatio * newPhotoOrder.width;
+    croppedWidth = croppedHeight / aspectRatio;
+  }
+  else
+  {
+    // set crop resolution to the same resolution since no crop is needed
+    croppedWidth = newPhotoOrder.width;
+    croppedHeight = newPhotoOrder.height;
   }
 
   // return cropped height and width
