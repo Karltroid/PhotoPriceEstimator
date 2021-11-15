@@ -79,7 +79,7 @@ function createNewPrintOrder()
     <h2>Step 3: Adjust crop</h2>\
     <div id=\"image-display-container\">\
       <div id=\"crop-selection-overlay\" class=\"hide\">\
-        <button id=\"crop-rotate-button\" type=\"button\" onclick=\"rotateCrop()\"><img src=\"images/rotate.png\" alt=\"Rotate Crop\"/></button>\
+        <button id=\"crop-rotate-button\" type=\"button\" onclick=\"rotateCrop()\"><img src=\"https://karltroid.github.io/PhotoPriceEstimator/images/rotate.png\" alt=\"Rotate Crop\"/></button>\
       </div>\
       <canvas id=\"userimage\"></canvas>\
     </div>\
