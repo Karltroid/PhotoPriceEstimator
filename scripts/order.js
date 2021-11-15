@@ -9,6 +9,10 @@ class PhotoOrder
   rgb;
   transparentPixels;
   whitePixels;
+  photoSize;
+  quantity;
+  ogImageUrl;
+  finalImageUrl;
 
   get width() { return this.pixelData.width; }
 

@@ -20,41 +20,6 @@ const PRINTSIZES_RATIO =
 
 var cropOverlay; // page elements
 var isDown = false;
-var currentPhotoSize = [6, 4];
-
-
-window.addEventListener('load', function()
-{
-  // get needed page elements
-  cropOverlay = document.getElementById('crop-selection-overlay');
-  croppedImageDisplay = document.getElementById('cropped-image');
-
-  // create events
-  cropOverlay.addEventListener('pointerdown', function(e)
-  {
-    cropClick(e);
-  }, true);
-
-  document.addEventListener('pointermove', function(event)
-  {
-    cropMove();
-  }, true);
-
-  document.addEventListener('pointerup', function()
-  {
-    cropUnclick();
-  }, true);
-
-  window.addEventListener('resize', function()
-  {
-    setCropBoxSize(currentPhotoSize);
-  }, true);
-
-
-  // move crop selection box to correct default position
-  checkCropBoxPosition();
-});
-
 
 
 function cropClick(e)
@@ -101,7 +66,7 @@ function setCustomCropBoxSize()
 
   document.getElementById("custom-ppi").innerHTML = "(" + ppi + "ppi)";
 
-  currentPhotoSize = [customHeight, customWidth];
+  newPhotoOrder.photoSize = [customHeight, customWidth];
   setCropBoxSize([customHeight, customWidth]);
 }
 
@@ -140,7 +105,7 @@ function setCropBoxSize(photosize)
   cropOverlay.style.height = adjustedHeight + "px";
 
   // save current photo size for if the page resizes and this function needs to be run again
-  currentPhotoSize = photosize;
+  newPhotoOrder.photoSize = photosize;
 
   // move resized crop box if it is now overflowing past the canvas
   checkCropBoxPosition();
@@ -170,7 +135,7 @@ function createCroppedImage()
   // get crop image data (left point, top point, resolution)
   var leftCrop = cropOverlay.offsetLeft / imageCanvas.offsetWidth * imageCanvas.width;
   var topCrop = cropOverlay.offsetTop / imageCanvas.offsetHeight * imageCanvas.height;
-  var croppedResolution = getCroppedResolution(currentPhotoSize);
+  var croppedResolution = getCroppedResolution(newPhotoOrder.photoSize);
 
   // get the current data of the main image canvas
   // get the image data of the cropped portion of the main image canvas
@@ -181,14 +146,15 @@ function createCroppedImage()
   var croppedImage = new Image();
   croppedImage.src = getImageURL(croppedImageData, croppedResolution.x, croppedResolution.y);
   croppedImageDisplay.src = croppedImage.src;
+	newPhotoOrder.finalImageUrl = croppedImage.src;
 }
 
 
 
 function rotateCrop()
 {
-  currentPhotoSize = [currentPhotoSize[1], currentPhotoSize[0]];
-  setCropBoxSize(currentPhotoSize);
+  newPhotoOrder.photoSize = [newPhotoOrder.photoSize[1], newPhotoOrder.photoSize[0]];
+  setCropBoxSize(newPhotoOrder.photoSize);
 }
 
 

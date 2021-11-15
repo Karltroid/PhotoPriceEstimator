@@ -2,21 +2,6 @@ const MEGAPIXEL = 1000000; // 1MP = 1,000,000 pixels
 
 var newPhotoOrder;
 
-window.addEventListener('load', function()
-{
-	// declare all document element variables
-	imageCanvas = document.getElementById('userimage');
-	resolutionDisplay = document.getElementById('info-resolution');
-	printSizeDisplay = document.getElementById('info-printsize');
-	orientationDisplay = document.getElementById('info-orientation');
-	averageRgbDisplay = document.getElementById('info-averagergb');
-	averageHexValueDisplay = document.getElementById('info-averagehexvalue');
-	averageCmykDisplay = document.getElementById('info-averagecmyk');
-	ignoredPixelsDisplay = document.getElementById('info-ignoredpixels');
-	luminanceDisplay = document.getElementById('info-luminance');
-
-	printSizeOption = document.getElementById('option-printsize');
-});
 
 
 function getImage(input)
@@ -47,6 +32,7 @@ function getImage(input)
 					getPhotoSizes();
 					evaluatePixelColors();
 					displayImageData(newPhotoOrder);
+					newPhotoOrder.ogImageUrl = image.src;
 				}
 			};
 		})(file);
@@ -72,7 +58,9 @@ function getImage(input)
 			getPhotoSizes();
 			evaluatePixelColors();
 			displayImageData(newPhotoOrder);
+			newPhotoOrder.ogImageUrl = image.src;
 		};
+
 
 		image.src = URL.createObjectURL(file);
 	}
@@ -101,26 +89,26 @@ function getPhotoSizes()
 				if (ppi >= 300)
 				{
 					displayDataAppend(printSizeOption,
-						"<button class=\"very-recommended-option\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
+						"<button class=\"very-recommended-option\" type=\"button\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
 					);
 				}
 				else
 				{
 					displayDataAppend(printSizeOption,
-						"<button class=\"recommended-option\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
+						"<button class=\"recommended-option\" type=\"button\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
 					);
 				}
 			}
 			else {
 				displayDataAppend(printSizeOption,
-					"<button onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
+					"<button type=\"button\" onclick=\"setCropBoxSize([" + PRINTSIZES[i][x] + "])\">" + PRINTSIZES[i][x][0] + "\" x " + PRINTSIZES[i][x][1] + "\" (" + ppi + "ppi)</button>"
 				);
 			}
 
 		}
 	}
 	displayDataAppend(printSizeOption,
-		"<button onclick=\"setCustomCropBoxSize()\">Custom: \
+		"<button type=\"button\" onclick=\"setCustomCropBoxSize()\">Custom: \
 			<input id=\"custom-height\" type=\"number\" min=\"1\" max=\"1000\" step=\"0.5\"/><font size=4>\"</font> x \
 			<input id=\"custom-width\" type=\"number\" min=\"1\" max=\"1000\" step=\"0.5\"/><font size=4>\"</font>\
 			<span id=\"custom-ppi\">(? ppi)</span>\
